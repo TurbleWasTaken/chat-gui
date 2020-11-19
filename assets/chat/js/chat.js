@@ -1266,7 +1266,7 @@ class Chat {
 	            MessageBuilder.info(`Embedded bigscreen URL #youtube/${check[4]}`).into(this);
 	        }
         } else {
-        	MessageBuilder.error(`URL doesn't match supported embeds`).into(this);
+        	MessageBuilder.error(`URL doesn't match supported embeds for destiny.gg/bigscreen`).into(this);
         }
     }
 
