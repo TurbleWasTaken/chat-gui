@@ -28,6 +28,7 @@ const nickregex = /^[a-zA-Z0-9_]{3,20}$/
 const nsfwnsflregex = new RegExp(`\\b(?:NSFL|NSFW)\\b`, 'i')
 const nsfwregex = new RegExp(`\\b(?:NSFW)\\b`, 'i')
 const nsflregex = new RegExp(`\\b(?:NSFL)\\b`, 'i')
+const embedregex = /(?:(twitch\.tv(\/videos)?\/)|(youtu\.?be(?:\.com\/watch\?v=)?\/?))([\w\d_-]+)/
 const tagcolors = ['green', 'yellow', 'orange', 'red', 'purple', 'blue', 'sky', 'lime', 'pink', 'black']
 const errorstrings = new Map([
     ['unknown', 'Unknown error, this usually indicates an internal problem :('],
@@ -166,6 +167,9 @@ const commandsinfo = new Map([
     ['svote', {
         desc: 'Start a sub-weighted vote.'
     }],
+    ['embed', {
+        desc: 'Returns the embeded url for a video player supported by destiny.gg/bigscreen.'
+    }],
 ])
 const banstruct = {
     id: 0,
@@ -294,6 +298,7 @@ class Chat {
         this.control.on('V', data => this.cmdVOTE(data, 'VOTE'));
         this.control.on('VOTESTOP', data => this.cmdVOTESTOP(data));
         this.control.on('VS', data => this.cmdVOTESTOP(data));
+        this.control.on('EMBED', data => this.cmdEMBED(data));
         return this;
     }
 
@@ -1249,6 +1254,22 @@ class Chat {
         MessageBuilder.info(`Available emoticons: ${[...this.emotes.map(v => v['prefix'])].join(', ')}`).into(this);
     }
 
+    cmdEMBED(parts){
+        const embedurl = parts[0];
+        const check = embedurl.match(embedregex);
+        if(check) {
+	        if(check[2]) {
+	            MessageBuilder.info(`Embeded bigscreen URL #twitch-vod/${check[4]}`).into(this);
+	        } else if (check[1]) {
+	            MessageBuilder.info(`Embeded bigscreen URL #twitch/${check[4]}`).into(this);
+	        } else {
+	            MessageBuilder.info(`Embeded bigscreen URL #youtube/${check[4]}`).into(this);
+	        }
+        } else {
+        	MessageBuilder.error(`URL doesn't match supported embeds`).into(this);
+        }
+    }
+
     cmdHELP(){
         let str = `Available commands: \r`;
         commandsinfo.forEach((a, k) => {
@@ -1393,7 +1414,7 @@ class Chat {
                 if(i === -1) highlights.push(nick);
                 break;
         }
-        MessageBuilder.info(command.toUpperCase() === 'HIGHLIGHT' ? `Highlighting ${nick}` : `No longer highlighting ${nick}}`).into(this);
+        MessageBuilder.info(command.toUpperCase() === 'HIGHLIGHT' ? `Highlighting ${nick}` : `No longer highlighting ${nick}`).into(this);
         this.settings.set('highlightnicks', highlights);
         this.applySettings();
     }
