@@ -168,7 +168,7 @@ const commandsinfo = new Map([
         desc: 'Start a sub-weighted vote.'
     }],
     ['embed', {
-        desc: 'Returns the embeded url for a video player supported by destiny.gg/bigscreen.'
+        desc: 'Returns the embedded url for a video player supported by destiny.gg/bigscreen.'
     }],
 ])
 const banstruct = {
@@ -1259,11 +1259,11 @@ class Chat {
         const check = embedurl.match(embedregex);
         if(check) {
 	        if(check[2]) {
-	            MessageBuilder.info(`Embeded bigscreen URL #twitch-vod/${check[4]}`).into(this);
+	            MessageBuilder.info(`Embedded bigscreen URL #twitch-vod/${check[4]}`).into(this);
 	        } else if (check[1]) {
-	            MessageBuilder.info(`Embeded bigscreen URL #twitch/${check[4]}`).into(this);
+	            MessageBuilder.info(`Embedded bigscreen URL #twitch/${check[4]}`).into(this);
 	        } else {
-	            MessageBuilder.info(`Embeded bigscreen URL #youtube/${check[4]}`).into(this);
+	            MessageBuilder.info(`Embedded bigscreen URL #youtube/${check[4]}`).into(this);
 	        }
         } else {
         	MessageBuilder.error(`URL doesn't match supported embeds`).into(this);
